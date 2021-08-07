@@ -98,13 +98,17 @@ The last part of this IPFS storage section is the information for the charts on 
 
 Propositions For Next Step
 ===
+#### Prop. 1  
 I think we should first make sure to agree on the general theme of the site. Like the color palete, nav bar, footer.. things thats doesnt really change with the content. As I said, im not an artist and will trust you for the disposition of the different pannels. off course I do like the green style I chose up to now and the logo but if you have something better im open to change.
 
 I personnaly think its difficult to take someones project and start from there, also my demo is very messy for now and you would probably not have a good time trying to restyle and move things around. It is probably faster to make brand new components.
 
 So I propose we start again from the ground up, make everything according to a nice theme and make sure to not have any laggy components. Then the blockchain related code that I have in the demo can easily be merged into the new frontend.
 
-
+#### Prop. 2  
+Make a clear plan for the distribution of the project's value. It is important to know how the final value of the project will be distributed. 
+- What percentage of the governance tokens will go to the team and how many fees can they take ?
+- What is the percentage of revenue going for marketing ?
 
 
 
