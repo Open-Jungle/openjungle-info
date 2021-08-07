@@ -31,27 +31,6 @@ At any time along the execution of the steps, if an ambiguity or uncertainty ari
 
 **To contribute,** clone this file, branch, make the modifications you want and add your ideas. Then simply make a pull request and I will accept it.
 
-How to start
-------------
-**To look at demo**  
-There is a bsc testnet demo running [here](https://jungleex.netlify.app/)  
-You must have MetaMask on to access the demo exchange.
-
-If you want coins to experiment with the demo just send me a dm at @LiquidBlocks on telegram. A beter solution will be created later.
-
-**To start editing**
-1. Start by cloning the repo
-2. Navigate to the App folder
-3. Run install
-4. Start a server
-```
-git clone https://github.com/FredCoteMtl/JungleEx
-cd jungleex-frontend
-npm install
-npm start
-```
-At this point you should see the landing page of the app.
-
 SPECIFICATIONS
 ==============
 *Last update: 2021-08-06  
