@@ -1,6 +1,6 @@
 ![JungleEx](https://ipfs.io/ipfs/QmSqktoxt6VagJt7azEmxCqKm8C7GbyjWeaREEeFbvvGtz "Logo Title Text 1")
 
-Welcome to the WorkPaper
+Welcome to the README
 ---
 **Goal of the project:**
 
