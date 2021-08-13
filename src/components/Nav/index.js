@@ -7,19 +7,28 @@ import FullLogo from '../../assets/jungleLogos/JungleLogoName.png';
 import LeafLogo from '../../assets/jungleLogos/Leaf.png';
 
 //components
-import ThemeToggle from '../ThemeToggle';
+import ThemeToggle from './NavComponents/ThemeToggle';
+import StatusSection from './NavComponents/StatusSection';
+import ChainToggle from './NavComponents/ChainToggle';
+import ServicesMenu from './NavComponents/ServicesMenu';
+import SocialLinks from './NavComponents/SocialLinks';
 
+// position all the Navs in top corner
 const NavWrapper = styled.div`
     position: sticky;
     top: 0px;
+    left: 0px;
     z-index: 9999;
 `;
 
+// To display when the user is on desktop (screen > 1080px)
 const SideNavWrapper = styled.div`
-    padding-top: 200px;
-
+    padding-top: 85px;
+    display: grid;
+    grid-template-rows: 20px calc(100vh - 270px) 60px 25px 80px;
 `;
 
+// to display when the user in on mobile (screen < 1080px)
 const NavBarWrapper = styled.div`
     height: 60px;
     display: flex;
@@ -29,10 +38,12 @@ const NavBarWrapper = styled.div`
 
 `;
 
+// display when user on mobile opens the main menu on top right
 const MobileNavWrapper = styled.div`
 
 `;
 
+// Always displays on the top left corner
 const JungleLogo = styled.img`
     position: absolute;
     top: 0;
@@ -62,7 +73,11 @@ const Nav = () => {
                     </NavBarWrapper>
                 ) : (
                    <SideNavWrapper>
+                        <SocialLinks />
+                        <ServicesMenu />
+                        <ChainToggle />
                         <ThemeToggle />
+                        <StatusSection />
                     </SideNavWrapper> 
                 )}
                 
