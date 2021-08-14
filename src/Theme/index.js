@@ -12,7 +12,7 @@ export default function ThemeProvider({ children }) {
     const [isDarkMode] = useDarkModeManager();
     
     return (
-        <StyledComponentsThemeProvider theme={theme(isDarkMode, false)}>
+        <StyledComponentsThemeProvider theme={theme(isDarkMode, true)}>
             {children}
         </StyledComponentsThemeProvider>
     );
@@ -28,17 +28,32 @@ const theme = (isDarkMode, isEthTheme) => ({
         colors: {
             mainColor: isDarkMode ?  "#8AC53C" : "#6F9F2F",
             mainHoverColor: isDarkMode ? "#6F9F2F" : "#8AC53C",
+
+            lightGray: isDarkMode ? "#616161" : "#919191",
+            lightGrayHover: isDarkMode ? "#919191" : "#616161",
         },
 
         isEthTheme: isEthTheme ? "block" : "none",
         isBnbTheme: !isEthTheme ? "block" : "none",
 
-        SideNavWidth: "220px",
+        widths: {
+            SideNavWidth: "220px",
+        },
+
+        heights: {
+            NavBarHeight: "60px",
+        },
+
+        paddings: {
+            SideNavLeftPadding: "22%",
+        },
+        
 })
 
 export const GlobalStyle = createGlobalStyle`
     html { 
         font-family: 'Encode Sans Expanded', sans-serif;
+        background-color: black;
     }
     
     html, body {

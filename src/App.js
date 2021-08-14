@@ -19,7 +19,7 @@ const AppWrapper = styled.div`
 
 const ContentWrapper = styled.div`
     display: grid;
-    grid-template-columns: ${({ theme }) => theme.SideNavWidth} 1fr;
+    grid-template-columns: ${({ theme }) => theme.widths.SideNavWidth} 1fr;
         
 
     @media screen and (max-width: 1080px) {
@@ -34,9 +34,12 @@ const AppDisplay = styled.div`
     height: 100%;
     width: 100%;
     min-height: 100vh;
-    z-index: 9999;
     transition: width 0.25s ease;
     background: ${({ theme }) => theme.appDisplayBackground};
+
+    @media screen and (max-width: 1080px) {
+        min-height: calc(100vh - ${({ theme }) => theme.heights.NavBarHeight});
+    }
 `
 
 const LayoutWrapper = ({ children }) => {

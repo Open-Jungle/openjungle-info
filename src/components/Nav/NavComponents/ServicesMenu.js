@@ -2,6 +2,12 @@ import React from 'react';
 import styled from 'styled-components';
 import { withRouter, Link as RouterLink } from 'react-router-dom';
 
+// react icons
+import { AiOutlineHome } from 'react-icons/ai';
+import { GiSwapBag } from 'react-icons/gi';
+import { FaSwimmingPool } from 'react-icons/fa';
+import { BiGlobeAlt, BiRocket } from 'react-icons/bi';
+
 const ServicesMenuWrapper = styled.div`
     height: 100%;
     width: 100%;
@@ -11,22 +17,36 @@ const ServicesMenuWrapper = styled.div`
 `;
 
 const ServiceMenuItem = styled(RouterLink)`
-    padding-left: 35px;
+    padding-left: ${({ theme }) => theme.paddings.SideNavLeftPadding};
     text-decoration: none;
-    font-size: 24px;
+    font-size: 18px;
     line-height: 36px;
     font-weight: bold;
-    color: #919191;
+    color: ${({ theme }) => theme.colors.lightGray};
+
+    :hover {
+        color: ${({ theme }) => theme.colors.lightGrayHover};
+    }
 `;
 
 const ServicesMenu = () => {
     return (
         <ServicesMenuWrapper>
-            <ServiceMenuItem>HOME</ServiceMenuItem>
-            <ServiceMenuItem>SWAP</ServiceMenuItem>
-            <ServiceMenuItem>LIQUIDITY</ServiceMenuItem>
-            <ServiceMenuItem>EXPLORE</ServiceMenuItem>
-            <ServiceMenuItem>LAUNCH</ServiceMenuItem>
+            <ServiceMenuItem to={'/home'}>
+                <AiOutlineHome /> HOME
+            </ServiceMenuItem>
+            <ServiceMenuItem to={'/swap'}>
+                <GiSwapBag /> SWAP
+            </ServiceMenuItem>
+            <ServiceMenuItem to={'/liquidity'}>
+                <FaSwimmingPool /> LIQUIDITY
+            </ServiceMenuItem>
+            <ServiceMenuItem to={'/explore'}>
+                <BiGlobeAlt /> EXPLORE
+            </ServiceMenuItem>
+            <ServiceMenuItem to={'/launch'}>
+                <BiRocket /> LAUNCH
+            </ServiceMenuItem>
         </ServicesMenuWrapper>
     )
 }

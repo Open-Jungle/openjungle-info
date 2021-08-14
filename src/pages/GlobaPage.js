@@ -2,8 +2,8 @@ import React from 'react'
 
 const GlobaPage = () => {
     return (
-        <div>
-            Global Page
+        <div style={{"color":"white"}}>
+            Some stuff
         </div>
     )
 }

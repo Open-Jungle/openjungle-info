@@ -28,7 +28,7 @@ const Button = styled.div`
 
 const ThemeToggle = () => {
 
-    const [ , toggleDarkMode] = useDarkModeManager()
+    const [ , toggleDarkMode] = useDarkModeManager();
     
     return (
         <ThemeToggleWrapper>

@@ -6,7 +6,8 @@ const JUNGLE = 'JUNGLE'; // main storage key (head)
 
 // Updatable storage keys
 const DARK_MODE = 'DARK_MODE';
-const UPDATABLE_KEYS = [DARK_MODE];
+const ETH_CHAIN = 'ETH_CHAIN';
+const UPDATABLE_KEYS = [DARK_MODE, ETH_CHAIN];
 
 // Reducer keys
 const UPDATE_KEY = 'UPDATE_KEY';
@@ -37,6 +38,7 @@ function reducer(state, { type, payload }) {
 function init() {
     const defaultValues = {
         [DARK_MODE]: true,
+        [ETH_CHAIN]: true,
     }
 
     try { 
