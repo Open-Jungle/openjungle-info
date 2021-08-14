@@ -8,12 +8,15 @@ import App from './App';
 import ThemeProvider, { GlobalStyle } from "./Theme";
 
 // Context Providers
-import LocalStorageContextProvider, { Updater as LocalStorageContextUpdater }from './contexts/LocalStorage'
+import LocalStorageContextProvider, { Updater as LocalStorageContextUpdater } from './contexts/LocalStorage';
+import ApplicationContextProvider from './contexts/Application';
 
 function ContextProviders({ children }) {
     return (
         <LocalStorageContextProvider>
-            {children}
+            <ApplicationContextProvider>
+                {children}
+            </ApplicationContextProvider>
         </LocalStorageContextProvider>
     );
 }

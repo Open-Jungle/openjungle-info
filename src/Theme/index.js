@@ -4,21 +4,26 @@ import { ThemeProvider as StyledComponentsThemeProvider, createGlobalStyle } fro
 
 // context providers
 import { useDarkModeManager } from '../contexts/LocalStorage';
+import { useSelectedChain } from '../contexts/Application';
 
 // instanciate the theme provider
 export default function ThemeProvider({ children }) {
     
-    // get the darkmode setings from localStorage
+    // get the darkmode and selected chain setings from localStorage
     const [isDarkMode] = useDarkModeManager();
-    
+    const [selectedChain] = useSelectedChain();
+
     return (
-        <StyledComponentsThemeProvider theme={theme(isDarkMode, true)}>
+        <StyledComponentsThemeProvider theme={theme(isDarkMode, selectedChain)}>
             {children}
         </StyledComponentsThemeProvider>
     );
 }
 
-const theme = (isDarkMode, isEthTheme) => ({
+const theme = (isDarkMode, selectedChain) => {
+    let isEthTheme = selectedChain === 'ETH' ? true : false;
+
+    return {
         backgoundGradient: isDarkMode ? 
                 "linear-gradient(116.82deg, #2C2C2C 18.54%, #000000 63.86%, #2B2B2B 100%)" :
                 "linear-gradient(144.18deg, #F2EFEF 14.55%, #CFCFCF 53.5%, rgba(223, 221, 221, 0.6) 79.04%)",
@@ -48,7 +53,8 @@ const theme = (isDarkMode, isEthTheme) => ({
             SideNavLeftPadding: "22%",
         },
         
-})
+    }
+}
 
 export const GlobalStyle = createGlobalStyle`
     html { 

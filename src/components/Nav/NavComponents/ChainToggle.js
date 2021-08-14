@@ -1,6 +1,9 @@
 import React from 'react';
 import styled from 'styled-components';
 
+//contexts
+import { useSelectedChain } from '../../../contexts/Application';
+
 const ChainToggleWrapper = styled.div`
     height: 100%;
     width: 100%;
@@ -28,9 +31,11 @@ const ToggleButton = styled.div`
 
 const ChainToggle = () => {
 
+    const [ , toggleChain ] = useSelectedChain();
+
     return (
         <ChainToggleWrapper>
-            <ToggleButton>
+            <ToggleButton onClick={toggleChain}>
                 Toggle Chain
             </ToggleButton>
         </ChainToggleWrapper>

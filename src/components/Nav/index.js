@@ -98,7 +98,6 @@ const Nav = () => {
                 <JungleLogo src={below1080 ? LeafLogo : FullLogo} alt={''} type={'img/png'} />
                 {below1080 ? (
                     <NavBarWrapper>
-                        {!isMobileNavActive && <ChainToggle />}
                         <MobileHamburgerMenuWrapper onClick={toggleIsMobileNavActive}>
                             <BiMenu size={40} />
                         </MobileHamburgerMenuWrapper>
@@ -112,7 +111,7 @@ const Nav = () => {
                         <StatusSection />
                     </SideNavWrapper> 
                 )}
-                {isMobileNavActive && (
+                {isMobileNavActive && below1080 && (
                     <>
                         <MobileNavWrapper isActive={isMobileNavActive} >
                             <MobileNavCenter>

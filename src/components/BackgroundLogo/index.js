@@ -4,6 +4,7 @@ import { default as ethLogo } from '../../assets/icons/eth-logo.svg';
 import { default as bnbLogo } from '../../assets/icons/bnb-logo.svg';
 
 const BackgroundLogoWrapper = styled.div`
+    pointer-events: none;
     opacity: 25%;
     position: absolute;
     top: 20%;
@@ -17,11 +18,13 @@ const BackgroundLogoWrapper = styled.div`
 `;
 
 const BackgroundLogoEth = styled.img`
+    pointer-events: none;
     height: 100%;
     display: ${({ theme }) => (theme.isEthTheme)};
 `;
 
 const BackgroundLogoBnb = styled.img`
+    pointer-events: none;
     height: 100%;
     display: ${({ theme }) => (theme.isBnbTheme)};
 `;
