@@ -1,13 +1,16 @@
 // react basic import
 import React, { createContext, useContext, useReducer, useMemo, useCallback, useEffect } from 'react';
 
+// constants
+import { SupportedNetwork } from '../constants';
+
 // Main storage key
 const JUNGLE = 'JUNGLE'; // main storage key (head)
 
 // Updatable storage keys
 const DARK_MODE = 'DARK_MODE';
-const ETH_CHAIN = 'ETH_CHAIN';
-const UPDATABLE_KEYS = [DARK_MODE, ETH_CHAIN];
+const SAVED_SELECTED_NETWORK = 'SAVED_SELECTED_NETWORK';
+const UPDATABLE_KEYS = [DARK_MODE, SAVED_SELECTED_NETWORK];
 
 // Reducer keys
 const UPDATE_KEY = 'UPDATE_KEY';
@@ -38,7 +41,7 @@ function reducer(state, { type, payload }) {
 function init() {
     const defaultValues = {
         [DARK_MODE]: true,
-        [ETH_CHAIN]: true,
+        [SAVED_SELECTED_NETWORK]: SupportedNetwork.ETH_MAINNET,
     }
 
     try { 
@@ -94,4 +97,15 @@ export function useDarkModeManager() {
 
     // return the value of darkmode and its toggle fct
     return [isDarkMode, toggleDarkMode];
+}
+
+export function useSavedNetwork() {
+    const [state, { updateKey }] = useLocalStorageContext();
+    const savedSelectedNetwork = state?.[SAVED_SELECTED_NETWORK];
+
+    function updateSavedSelectedNetwork(newSelectedNetwork) {
+        updateKey(SAVED_SELECTED_NETWORK, newSelectedNetwork);
+    }
+
+    return [savedSelectedNetwork, updateSavedSelectedNetwork];
 }

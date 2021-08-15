@@ -4,17 +4,15 @@ import { ThemeProvider as StyledComponentsThemeProvider, createGlobalStyle } fro
 
 // context providers
 import { useDarkModeManager } from '../contexts/LocalStorage';
-import { useSelectedChain } from '../contexts/Application';
 
 // instanciate the theme provider
 export default function ThemeProvider({ children }) {
     
     // get the darkmode and selected chain setings from localStorage
     const [isDarkMode] = useDarkModeManager();
-    const [selectedChain] = useSelectedChain();
 
     return (
-        <StyledComponentsThemeProvider theme={theme(isDarkMode, selectedChain)}>
+        <StyledComponentsThemeProvider theme={theme(isDarkMode, 'ETH')}>
             {children}
         </StyledComponentsThemeProvider>
     );
