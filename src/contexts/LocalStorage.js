@@ -86,7 +86,6 @@ export function Updater() {
 
 // custom hook to work with darkmode theme
 export function useDarkModeManager() {
-    // Extract the value of the darkmode storage key
     const [state, { updateKey }] = useLocalStorageContext();
     let isDarkMode = state[DARK_MODE];
 
@@ -99,6 +98,7 @@ export function useDarkModeManager() {
     return [isDarkMode, toggleDarkMode];
 }
 
+// 
 export function useSavedNetwork() {
     const [state, { updateKey }] = useLocalStorageContext();
     const savedSelectedNetwork = state?.[SAVED_SELECTED_NETWORK];

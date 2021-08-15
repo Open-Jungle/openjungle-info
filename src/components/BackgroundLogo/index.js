@@ -10,6 +10,7 @@ const BackgroundLogoWrapper = styled.div`
     top: 20%;
     left: 60%;
     height: 100%;
+    z-index: -1;
 
     @media screen and (max-width: 650px) {
         transform: translateX(-200px);

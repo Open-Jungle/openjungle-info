@@ -34,6 +34,8 @@ const theme = (isDarkMode, selectedChain) => {
 
             lightGray: isDarkMode ? "#616161" : "#919191",
             lightGrayHover: isDarkMode ? "#919191" : "#616161",
+
+            whiteBlack: isDarkMode ? '#DEDEDE' : '#323232',
         },
 
         isEthTheme: isEthTheme ? "block" : "none",

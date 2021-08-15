@@ -3,7 +3,7 @@ import styled from "styled-components";
 import { Switch, Route, Redirect } from 'react-router-dom';
 
 // == pages ==
-import GlobalPage from './pages/GlobaPage'
+import HomePage from './pages/HomePage'
 
 // == components ==
 import Nav from "./components/Nav"
@@ -15,12 +15,12 @@ const AppWrapper = styled.div`
     min-height: 100vh;
     background: ${({ theme }) => theme.backgoundGradient};
     overflow: hidden;
+    z-index: 0;
 `;
 
 const ContentWrapper = styled.div`
     display: grid;
-    grid-template-columns: ${({ theme }) => theme.widths.SideNavWidth} 1fr;
-        
+    grid-template-columns: ${({ theme }) => theme.widths.SideNavWidth} 1fr; 
 
     @media screen and (max-width: 1080px) {
         grid-template-columns: 1fr;
@@ -58,7 +58,7 @@ const App = () => {
             <Switch>
                 <Route path="/home">
                     <LayoutWrapper>
-                        <GlobalPage />
+                        <HomePage />
                     </LayoutWrapper>
                 </Route>
 
