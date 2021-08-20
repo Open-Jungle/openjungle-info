@@ -19,6 +19,7 @@ const NavWrapper = styled.div`
     position: sticky;
     top: 0px;
     left: 0px;
+    z-index: 10;
 `;
 
 // To display when the user is on desktop (screen > 1080px)

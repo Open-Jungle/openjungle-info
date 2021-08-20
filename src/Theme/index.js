@@ -3,23 +3,24 @@ import React from "react";
 import { ThemeProvider as StyledComponentsThemeProvider, createGlobalStyle } from "styled-components";
 
 // context providers
-import { useDarkModeManager } from '../contexts/LocalStorage';
+import { useDarkModeManager, useSavedNetwork } from '../contexts/LocalStorage';
 
 // instanciate the theme provider
 export default function ThemeProvider({ children }) {
     
     // get the darkmode and selected chain setings from localStorage
     const [isDarkMode] = useDarkModeManager();
+    const [selectedChain] = useSavedNetwork();
 
     return (
-        <StyledComponentsThemeProvider theme={theme(isDarkMode, 'ETH')}>
+        <StyledComponentsThemeProvider theme={theme(isDarkMode, selectedChain)}>
             {children}
         </StyledComponentsThemeProvider>
     );
 }
 
 const theme = (isDarkMode, selectedChain) => {
-    let isEthTheme = selectedChain === 'ETH' ? true : false;
+    let isEthTheme = selectedChain === 'ETH_MAINNET' ? true : false;
 
     return {
         backgoundGradient: isDarkMode ? 
@@ -27,6 +28,7 @@ const theme = (isDarkMode, selectedChain) => {
                 "linear-gradient(144.18deg, #F2EFEF 14.55%, #CFCFCF 53.5%, rgba(223, 221, 221, 0.6) 79.04%)",
         
         appDisplayBackground: 'rgba(233, 233, 233, 0.1)',
+        advancedBG: isDarkMode ? 'rgba(0,0,0,0.1)' : 'rgba(255,255,255,0.4)',
 
         colors: {
             mainColor: isDarkMode ?  "#8AC53C" : "#6F9F2F",

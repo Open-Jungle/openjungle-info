@@ -1,9 +1,11 @@
 import React from 'react';
 import styled from 'styled-components';
+import { useMedia } from 'react-use';
 
 // components
-import { PageWrapper, ContentWrapper } from '../components'
+import { PageWrapper, ContentWrapper, Panel } from '../components'
 import TitleSection from '../components/HomePageComponents/TitleSection'
+import GlobalChart from '../components/Charts/GlobalChart'
 
 
 const OverviewTitle = styled.div`
@@ -18,14 +20,51 @@ const OverviewTitle = styled.div`
     }
 `;
 
+const GridRow = styled.div`
+    display: grid;
+    width: 100%;
+    grid-template-columns: 1fr 1fr;
+    column-gap: 6px;
+    align-items: start;
+    justify-content: space-between;
+`;
+
+const MobileChartWrapper = styled.div`
+    display: grid;
+    grid-auto-rows: auto;
+    grid-row-gap: 24px;
+    marginTop: 6px;
+`;
+
 const HomePage = () => {
+
+    const below800 = useMedia("(max-width: 800px)");
+
     return (
         <PageWrapper>
             <ContentWrapper>
                 <TitleSection />
                 <OverviewTitle>OVERVIEW</OverviewTitle>
-                {/* <BattleBar /> */}
-                {/* <GlobalCharts /> */}
+                {!below800 && (
+                    <GridRow>
+                        <Panel>
+                            <GlobalChart display="liquidity" />
+                        </Panel>
+                        <Panel>
+                            <GlobalChart display="volume" />
+                        </Panel>
+                    </GridRow>
+                )}
+                {below800 && (
+                    <MobileChartWrapper>
+                        <Panel>
+                            <GlobalChart display="liquidity" />
+                        </Panel>
+                    </MobileChartWrapper>
+                )}
+                <Panel>
+                    test section
+                </Panel>
             </ContentWrapper>
         </PageWrapper>
     )

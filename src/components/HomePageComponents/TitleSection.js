@@ -49,7 +49,7 @@ const Spliter = styled.div`
     margin-top: 20px;
 
     @media screen and (max-width: 768px){
-        margin-top: 7px;
+        margin-top: 14px;
     }
 `;
 
