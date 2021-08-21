@@ -62,9 +62,9 @@ const HomePage = () => {
                         </Panel>
                     </MobileChartWrapper>
                 )}
-                <Panel>
+               {/*  <Panel>
                     test section
-                </Panel>
+                </Panel> */}
             </ContentWrapper>
         </PageWrapper>
     )

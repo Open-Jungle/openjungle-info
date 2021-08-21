@@ -11,13 +11,16 @@ import ThemeProvider, { GlobalStyle } from "./Theme";
 import LocalStorageContextProvider, { Updater as LocalStorageContextUpdater } from './contexts/LocalStorage';
 import ApplicationContextProvider from './contexts/Application';
 import NetworkContextProvider from "./contexts/Network";
+import GlobalDataContextProvider from './contexts/GlobalData';
 
 function ContextProviders({ children }) {
     return (
         <LocalStorageContextProvider>
             <ApplicationContextProvider>
                 <NetworkContextProvider>
-                    {children}
+                    <GlobalDataContextProvider>
+                        {children}
+                    </GlobalDataContextProvider>
                 </NetworkContextProvider>
             </ApplicationContextProvider>
         </LocalStorageContextProvider>

@@ -33,6 +33,7 @@ const theme = (isDarkMode, selectedChain) => {
         colors: {
             mainColor: isDarkMode ?  "#8AC53C" : "#6F9F2F",
             mainHoverColor: isDarkMode ? "#6F9F2F" : "#8AC53C",
+            mainColorZeroOp: isDarkMode ? 'rgba(138, 197, 60, 0)' : 'rgba(111, 159, 47, 0)',
 
             lightGray: isDarkMode ? "#616161" : "#919191",
             lightGrayHover: isDarkMode ? "#919191" : "#616161",

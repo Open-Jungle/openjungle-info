@@ -195,14 +195,17 @@ const TradingViewChart = ({
               lineColor: '#ff007a',
               lineWidth: 3,
             })
-          : chart.addAreaSeries({
-              topColor: '#ff007a',
-              bottomColor: 'rgba(255, 0, 122, 0)',
-              lineColor: '#ff007a',
+          : 
+          chart.addAreaSeries({
+              topColor: '#8AC53C',
+              bottomColor: 'rgba(138, 197, 60, 0)',
+              lineColor: '#8AC53C',
               lineWidth: 3,
             })
 
-      series.setData(formattedData)
+      try{ series.setData(formattedData) }
+      catch (e) { console.log('setData Failed') }
+      console.log(formattedData[5])
       var toolTip = document.createElement('div')
       toolTip.setAttribute('id', 'tooltip-id' + type)
       toolTip.className = darkMode ? 'three-line-legend-dark' : 'three-line-legend'
