@@ -41,16 +41,17 @@ const Wrapper = styled.div`
 // constant height for charts
 const HEIGHT = 300
 
-const TradingViewChart = ({ type, data, base, baseChange, field, title, width, useWeekly = true }) => {
+const TradingViewChart = ({ type, dataUniswap, dataPancakeswap, base, baseChange, field, title, width, useWeekly = true }) => {
     // reference for DOM element to create with chart
     const ref = useRef()
 
     // pointer to the chart object
     const [chartCreated, setChartCreated] = useState(false)
-    const dataPrev = usePrevious(data)
+    const dataPrevUniswap = usePrevious(dataUniswap)
+    const dataPrevPancakeswap = usePrevious(dataPancakeswap)
 
     useEffect(() => {
-        if (data !== dataPrev && chartCreated && type === CHART_TYPES.BAR) {
+        if (dataPancakeswap !== dataPrevPancakeswap && dataUniswap !== dataPrevUniswap && chartCreated && type === CHART_TYPES.BAR) {
             // remove the tooltip element
             let tooltip = document.getElementById('tooltip-id' + type)
             let node = document.getElementById('test-id' + type)
@@ -58,10 +59,16 @@ const TradingViewChart = ({ type, data, base, baseChange, field, title, width, u
             chartCreated.resize(0, 0)
             setChartCreated()
         }
-    }, [chartCreated, data, dataPrev, type])
+    }, [chartCreated, dataUniswap, dataPrevUniswap, dataPancakeswap, dataPrevPancakeswap, type])
 
     // parese the data and format for tardingview consumption
-    const formattedData = data?.map((entry) => {
+    const formattedDataUniswap = dataUniswap?.map((entry) => {
+        return {
+            time: dayjs.unix(entry.date).utc().format('YYYY-MM-DD'),
+            value: parseFloat(entry[field]),
+        }
+    })
+    const formattedDataPancakeswap = dataPancakeswap?.map((entry) => {
         return {
             time: dayjs.unix(entry.date).utc().format('YYYY-MM-DD'),
             value: parseFloat(entry[field]),
@@ -90,10 +97,7 @@ const TradingViewChart = ({ type, data, base, baseChange, field, title, width, u
 
     // if no chart created yet, create one with options and add to DOM manually
     useEffect(() => {
-        if (!chartCreated && formattedData) {
-
-            console.log('creating chart '+ type)
-
+        if (!chartCreated && formattedDataUniswap && formattedDataPancakeswap) {
             var chart = createChart(ref.current, {
                 width: width,
                 height: HEIGHT,
@@ -144,32 +148,47 @@ const TradingViewChart = ({ type, data, base, baseChange, field, title, width, u
                 },
             })
 
-            var series = (type === CHART_TYPES.BAR ? 
+            var seriesUniswap = (type === CHART_TYPES.BAR ? 
                 chart.addHistogramSeries({
-                    color: '#8AC53C',
+                    color: '#FF007B',
                     priceFormat: { type: 'volume' },
                     scaleMargins: {
                         top: 0.32,
                         bottom: 0,
                     },
-                    lineColor: '#8AC53C',
+                    lineColor: '#FF007B',
                     lineWidth: 3,
                 }): 
                 chart.addAreaSeries({
-                    topColor: '#8AC53C',
-                    bottomColor: 'rgba(138, 197, 60, 0)',
-                    lineColor: '#8AC53C',
+                    topColor: '#FF007B',
+                    bottomColor: 'rgba(255, 0, 123, 0)',
+                    lineColor: '#FF007B',
+                    lineWidth: 3,
+                })
+            )
+
+            var seriesPancakeswap = (type === CHART_TYPES.BAR ? 
+                chart.addHistogramSeries({
+                    color: '#49D5DC',
+                    priceFormat: { type: 'volume' },
+                    scaleMargins: {
+                        top: 0.32,
+                        bottom: 0,
+                    },
+                    lineColor: '#49D5DC',
+                    lineWidth: 3,
+                }): 
+                chart.addAreaSeries({
+                    topColor: '#49D5DC',
+                    bottomColor: 'rgba(73, 213, 220, 0)',
+                    lineColor: '#49D5DC',
                     lineWidth: 3,
                 })
             )
 
             
-            try{ series.setData(formattedData) }
-            catch (e) { 
-                console.log(`chart create ${type} failled`)
-                console.log(formattedData)
-                console.log(data)
-            }
+            seriesUniswap.setData(formattedDataUniswap)
+            seriesPancakeswap.setData(formattedDataPancakeswap)
             
             // create the tooltip
             var toolTip = document.createElement('div')
@@ -195,7 +214,7 @@ const TradingViewChart = ({ type, data, base, baseChange, field, title, width, u
             setLastBarText()
 
             // update the title when hovering on the chart
-            chart.subscribeCrosshairMove(function (param) {
+            /* chart.subscribeCrosshairMove(function (param) {
                 if (
                     param === undefined ||
                     param.time === undefined ||
@@ -225,13 +244,13 @@ const TradingViewChart = ({ type, data, base, baseChange, field, title, width, u
                         '</div>'
                     )
                 }
-            })
+            }) */
 
             chart.timeScale().fitContent()
 
             setChartCreated(chart)
         }
-    }, [base, baseChange, chartCreated, darkMode, data, formattedData, textColor, title, topScale, type, useWeekly, width])
+    }, [base, baseChange, chartCreated, darkMode, dataUniswap, formattedDataUniswap, formattedDataPancakeswap, textColor, title, topScale, type, useWeekly, width])
 
     // responsiveness
     useEffect(() => {

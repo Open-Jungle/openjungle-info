@@ -2,7 +2,7 @@ import React, { useRef, useEffect, useState, useMemo } from 'react'
 import styled from 'styled-components'
 import { ResponsiveContainer } from 'recharts'
 import TradingviewChart, { CHART_TYPES } from './TradingviewChart'
-import { useGlobalChartData } from '../../contexts/GlobalData'
+import { useGlobalChartDataUniswap, useGlobalChartDataPancakeswap } from '../../contexts/GlobalData'
 import { getTimeframe } from '../../utils'
 import { useTimeframe } from '../../contexts/Application'
 
@@ -61,7 +61,8 @@ const GlobalChart = ({ display }) => {
     const [volumeWindow, setVolumeWindow] = useState(VOLUME_WINDOW.DAYS)
 
     // global historical data
-    const [dailyData, weeklyData] = useGlobalChartData()
+    const [dailyDataUniswap, weeklyDataUniswap] = useGlobalChartDataUniswap()
+    const [dailyDataPancakeswap, weeklyDataPancakeswap] = useGlobalChartDataPancakeswap()
     const weeklyVolumeChange = 0;
     const oneWeekVolume = 0;
     const liquidityChangeUSD = 3.23;
@@ -70,11 +71,11 @@ const GlobalChart = ({ display }) => {
     const totalLiquidityUSD = 4810000000;
 
 
-    // based on window, get starttim
+    // based on window, get starttime
     let utcStartTime = getTimeframe(timeWindow)
 
-    const chartDataFiltered = useMemo(() => {
-        let currentData = volumeWindow === VOLUME_WINDOW.DAYS ? dailyData : weeklyData
+    const chartDataFilteredUniswap = useMemo(() => {
+        let currentData = volumeWindow === VOLUME_WINDOW.DAYS ? dailyDataUniswap : weeklyDataUniswap
         return (
             currentData && Object.keys(currentData)?.map((key) => {
                 let item = currentData[key]
@@ -83,7 +84,19 @@ const GlobalChart = ({ display }) => {
             })
             .filter((item) => { return !!item })
         )
-    }, [dailyData, utcStartTime, volumeWindow, weeklyData])
+    }, [dailyDataUniswap, utcStartTime, volumeWindow, weeklyDataUniswap])
+
+    const chartDataFilteredPancakeswap = useMemo(() => {
+        let currentData = volumeWindow === VOLUME_WINDOW.DAYS ? dailyDataPancakeswap : weeklyDataPancakeswap
+        return (
+            currentData && Object.keys(currentData)?.map((key) => {
+                let item = currentData[key]
+                if (item.date > utcStartTime) { return item } 
+                else { return true }
+            })
+            .filter((item) => { return !!item })
+        )
+    }, [dailyDataPancakeswap, utcStartTime, volumeWindow, weeklyDataPancakeswap])
     
     const ref = useRef()
     const isClient = typeof window === 'object'
@@ -95,12 +108,13 @@ const GlobalChart = ({ display }) => {
         return () => window.removeEventListener('resize', handleResize)
     }, [isClient, width])
 
-    return chartDataFiltered ? (
+    return chartDataFilteredUniswap ? (
         <>
-            {chartDataFiltered && chartView === CHART_VIEW.LIQUIDITY && (
+            {chartDataFilteredUniswap && chartView === CHART_VIEW.LIQUIDITY && (
                 <ResponsiveContainer aspect={60 / 28} ref={ref}>
                     <TradingviewChart
-                        data={dailyData}
+                        dataUniswap={dailyDataUniswap}
+                        dataPancakeswap={dailyDataPancakeswap}
                         base={totalLiquidityUSD}
                         baseChange={liquidityChangeUSD}
                         title="Liquidity"
@@ -110,10 +124,11 @@ const GlobalChart = ({ display }) => {
                     />
                 </ResponsiveContainer>
             )}
-            {chartDataFiltered && chartView === CHART_VIEW.VOLUME && (
+            {chartDataFilteredUniswap && chartView === CHART_VIEW.VOLUME && (
                 <ResponsiveContainer aspect={60 / 28}>
                     <TradingviewChart
-                        data={chartDataFiltered}
+                        dataUniswap={chartDataFilteredUniswap}
+                        dataPancakeswap={chartDataFilteredPancakeswap}
                         base={volumeWindow === VOLUME_WINDOW.WEEKLY ? oneWeekVolume : oneDayVolumeUSD}
                         baseChange={volumeWindow === VOLUME_WINDOW.WEEKLY ? weeklyVolumeChange : volumeChangeUSD}
                         title={volumeWindow === VOLUME_WINDOW.WEEKLY ? 'Volume (7d)' : 'Volume'}

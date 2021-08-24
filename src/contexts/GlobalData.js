@@ -10,8 +10,8 @@ import { useTimeframe } from './Application'
 import { getTimeframe } from '../utils'
 
 // clients and queries
-import { uniswapClient } from '../apollo/client'
-import { GLOBAL_CHART } from '../apollo/queries'
+import { uniswapClient, pancakeswapClient } from '../apollo/client'
+import { UNISWAP_GLOBAL_CHART, PANCAKESWAP_GLOBAL_CHART } from '../apollo/queries'
 
 // format dayjs with the libraries that we need
 dayjs.extend(utc)
@@ -19,6 +19,7 @@ dayjs.extend(weekOfYear)
 
 // reducer keys
 const UPDATE_GLOBAL_CHART_DATA_UNISWAP = 'UPDATE_GLOBAL_CHART_DATA_UNISWAP'
+const UPDATE_GLOBAL_CHART_DATA_PANCAKESWAP = 'UPDATE_GLOBAL_CHART_DATA_PANCAKESWAP'
 
 // initialize the context
 const GlobalDataContext = createContext();
@@ -32,6 +33,14 @@ function reducer(state, { type, payload }) {
             return {
                 ...state,
                 GLOBAL_CHART_DATA_UNISWAP: { daily, weekly },
+            }
+        }
+
+        case UPDATE_GLOBAL_CHART_DATA_PANCAKESWAP: {
+            const { daily, weekly } = payload
+            return {
+                ...state,
+                GLOBAL_CHART_DATA_PANCAKESWAP: { daily, weekly },
             }
         }
 
@@ -51,6 +60,13 @@ export default function Provider({ children }) {
         })
     },[])
 
+    const updateGlobalChartDataPancakeswap = useCallback((daily, weekly)=>{
+        dispatch({
+            type: UPDATE_GLOBAL_CHART_DATA_PANCAKESWAP,
+            payload: { daily, weekly }
+        })
+    },[])
+
     return(
         <GlobalDataContext.Provider 
             value={ useMemo(
@@ -58,8 +74,9 @@ export default function Provider({ children }) {
                     state,
                     {
                         updateGlobalChartDataUniswap,
+                        updateGlobalChartDataPancakeswap
                     }
-                ],[state, updateGlobalChartDataUniswap]
+                ],[state, updateGlobalChartDataUniswap, updateGlobalChartDataPancakeswap]
             )}
         >
             {children}
@@ -75,19 +92,31 @@ const getGlobalChartData = async (dex, oldestDateToFetch) => {
     let skip = 0
     let allFound = false
 
-    let client = dex === 'uniswap' ? uniswapClient : uniswapClient
-
     try {
-        while (!allFound) {
-            let result = await client.query({
-                query: GLOBAL_CHART,
-                variables: { startTime: oldestDateToFetch, skip },
-                fetchPolicy: 'cache-first',
-            })
-            skip += 1000
-            data = data.concat(result.data.uniswapDayDatas)
-            if (result.data.uniswapDayDatas.length < 1000) { allFound = true }
+        if(dex === 'uniswap') {
+            while (!allFound) {
+                let result = await uniswapClient.query({
+                    query: UNISWAP_GLOBAL_CHART,
+                    variables: { startTime: oldestDateToFetch, skip },
+                    fetchPolicy: 'cache-first',
+                })
+                skip += 1000
+                data = data.concat(result.data.uniswapDayDatas)
+                if (result.data.uniswapDayDatas.length < 1000) { allFound = true }
+            }
+        } else {
+            while (!allFound) {
+                let result = await pancakeswapClient.query({
+                    query: PANCAKESWAP_GLOBAL_CHART,
+                    variables: { startTime: oldestDateToFetch, skip },
+                    fetchPolicy: 'cache-first',
+                })
+                skip += 1000
+                data = data.concat(result.data.pancakeDayDatas)
+                if (result.data.pancakeDayDatas.length < 1000) { allFound = true }
+            }
         }
+        
 
         if (data) {
             let dayIndexSet = new Set()
@@ -150,7 +179,7 @@ const getGlobalChartData = async (dex, oldestDateToFetch) => {
     return [data, weeklyData]
 }
 
-export function useGlobalChartData() {
+export function useGlobalChartDataUniswap() {
     const [state, { updateGlobalChartDataUniswap }] = useGlobalDataContext();
     const [oldestDateFetch, setOldestDateFetched] = useState();
     const [activeWindow] = useTimeframe();
@@ -173,7 +202,7 @@ export function useGlobalChartData() {
     }, [activeWindow, oldestDateFetch])
 
     /**
-    * Fetch data if none fetched or older data is needed
+    * Fetch uniswapdata if none fetched or older data is needed
     */
     useEffect(() => {
         async function fetchData() {
@@ -189,3 +218,41 @@ export function useGlobalChartData() {
     return [chartDataDailyUniswap, chartDataWeeklyUniswap]
 }
 
+export function useGlobalChartDataPancakeswap() {
+    const [state, { updateGlobalChartDataPancakeswap }] = useGlobalDataContext();
+    const [oldestDateFetch, setOldestDateFetched] = useState();
+    const [activeWindow] = useTimeframe();
+
+    const chartDataDailyPancakeswap = state?.GLOBAL_CHART_DATA_PANCAKESWAP?.daily;
+    const chartDataWeeklyPancakeswap = state?.GLOBAL_CHART_DATA_PANCAKESWAP?.weekly;
+
+    /**
+    * Keep track of oldest date fetched. Used to
+    * limit data fetched until its actually needed.
+    * (dont fetch year long stuff unless year option selected)
+    */
+    useEffect(() => {
+        // based on window, get starttime
+        let startTime = getTimeframe(activeWindow)
+
+        if ((activeWindow && startTime < oldestDateFetch) || !oldestDateFetch) {
+            setOldestDateFetched(startTime)
+        }
+    }, [activeWindow, oldestDateFetch])
+
+    /**
+    * Fetch uniswapdata if none fetched or older data is needed
+    */
+    useEffect(() => {
+        async function fetchData() {
+            // historical stuff for chart
+            let [newChartData, newWeeklyData] = await getGlobalChartData('pancakeswap', oldestDateFetch, undefined)
+            updateGlobalChartDataPancakeswap(newChartData, newWeeklyData)
+        }
+        if (oldestDateFetch && !(chartDataDailyPancakeswap && chartDataWeeklyPancakeswap)) {
+            fetchData()
+        }
+    }, [chartDataDailyPancakeswap, chartDataWeeklyPancakeswap, oldestDateFetch, updateGlobalChartDataPancakeswap])
+
+    return [chartDataDailyPancakeswap, chartDataWeeklyPancakeswap]
+}

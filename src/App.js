@@ -61,7 +61,6 @@ const App = () => {
                         <HomePage />
                     </LayoutWrapper>
                 </Route>
-
                 <Redirect to="/home" />
             </Switch>
         </AppWrapper>
