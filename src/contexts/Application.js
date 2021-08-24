@@ -40,7 +40,7 @@ function reducer(state, { type, payload }) {
 
 const INITIAL_STATE = {
     BASE_CURRENCY: 'USD',
-    TIME_FRAME: timeframeOptions.HALF_YEAR,
+    TIME_FRAME: timeframeOptions.ALL_TIME,
 }
 
 export default function Provider({ children }) {

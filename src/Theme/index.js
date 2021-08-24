@@ -71,4 +71,21 @@ export const GlobalStyle = createGlobalStyle`
         width: 100%;
         height: 100%;
     }
+
+    .three-line-legend {
+        width: 100%;
+        height: 70px;
+        position: absolute;
+        padding: 8px;
+        font-size: 12px;
+        background-color: rgba(255, 255, 255, 0.23);
+        text-align: left;
+        z-index: 10;
+        pointer-events: none;
+        display: block;
+        fontWeight: 500;
+        left: -4px;
+        top : -8px;
+        background-color: transparent;
+    }
 `;

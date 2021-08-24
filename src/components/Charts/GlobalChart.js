@@ -1,10 +1,10 @@
 import React, { useRef, useEffect, useState, useMemo } from 'react'
 import styled from 'styled-components'
 import { ResponsiveContainer } from 'recharts'
-import { timeframeOptions } from '../../constants'
 import TradingviewChart, { CHART_TYPES } from './TradingviewChart'
 import { useGlobalChartData } from '../../contexts/GlobalData'
 import { getTimeframe } from '../../utils'
+import { useTimeframe } from '../../contexts/Application'
 
 const CHART_VIEW = {
     VOLUME: 'Volume',
@@ -50,10 +50,6 @@ const Row = styled.div`
     padding: 0;
     align-items: center;
     width: fit-content;
-    bottom: 70px,
-    position: absolute,
-    left: 20px,
-    z-index: 9,
 `;
 
 const GlobalChart = ({ display }) => {
@@ -61,7 +57,7 @@ const GlobalChart = ({ display }) => {
     const [chartView] = useState(display === 'volume' ? CHART_VIEW.VOLUME : CHART_VIEW.LIQUIDITY)
 
     // time window and window size for chart
-    const timeWindow = timeframeOptions.ALL_TIME
+    const timeWindow = useTimeframe();
     const [volumeWindow, setVolumeWindow] = useState(VOLUME_WINDOW.DAYS)
 
     // global historical data
@@ -125,7 +121,9 @@ const GlobalChart = ({ display }) => {
                         width={width}
                         type={CHART_TYPES.BAR}
                         useWeekly={volumeWindow === VOLUME_WINDOW.WEEKLY}
+                        timeframe={volumeWindow}
                     />
+                
                 </ResponsiveContainer>
             )}
             {display === 'volume' && (

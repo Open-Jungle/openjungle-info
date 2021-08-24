@@ -132,7 +132,7 @@ const getGlobalChartData = async (dex, oldestDateToFetch) => {
         let startIndexWeekly = -1
         let currentWeek = -1
 
-        data.forEach((entry, i) => {
+        data.forEach((entry, i) => {   
             const week = dayjs.utc(dayjs.unix(data[i].date)).week()
             if (week !== currentWeek) {
                 currentWeek = week;
@@ -147,7 +147,6 @@ const getGlobalChartData = async (dex, oldestDateToFetch) => {
             checked = true
         }
     } catch (e) { console.log(e) }
-    console.log(data[0])
     return [data, weeklyData]
 }
 

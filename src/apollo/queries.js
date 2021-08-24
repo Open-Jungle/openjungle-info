@@ -1,5 +1,4 @@
 import gql from 'graphql-tag'
-import { FACTORY_ADDRESS, BUNDLE_ID } from '../constants'
 
 export const GLOBAL_CHART = gql`
     query uniswapDayDatas($startTime: Int!, $skip: Int!) {
