@@ -55,6 +55,11 @@ const theme = (isDarkMode, selectedChain) => {
         paddings: {
             SideNavLeftPadding: "22%",
         },
+
+        text1: isDarkMode ? '#fffdfa' : '#1F1F1F',
+        bg3: isDarkMode ? '#40444F' : '#EDEEF2',
+        bg4: isDarkMode ? '#565A69' : '#CED0D9',
+        bg5: isDarkMode ? '#565A69' : '#888D9B',
         
     }
 }

@@ -1,10 +1,14 @@
 import React, { useRef, useEffect, useState, useMemo } from 'react'
+import { useMedia } from 'react-use'
 import styled from 'styled-components'
 import { ResponsiveContainer } from 'recharts'
 import TradingviewChart, { CHART_TYPES } from './TradingviewChart'
 import { useGlobalChartDataUniswap, useGlobalChartDataPancakeswap } from '../../contexts/GlobalData'
 import { getTimeframe } from '../../utils'
 import { useTimeframe } from '../../contexts/Application'
+import { OptionButton } from '../Buttons'
+import { RowFixed } from '../Rows'
+import DropdownSelect from '../DropdownSelect'
 
 const CHART_VIEW = {
     VOLUME: 'Volume',
@@ -22,39 +26,9 @@ const OptionText = styled.div`
     color: ${({ theme }) => theme.colors.mainColor}
 `;
 
-const OptionButton = styled.button`
-    background-color: rgba(255, 255, 255, 0.15);
-    border: 1px solid rgba(255, 255, 255, 0.15);
-    color: black;
-    height: 100%;
-    font-weight: 400;
-    
-    &:hover,:focus {
-        background-color: rgba(255, 255, 255, 0.25);
-        border-color: rgba(255, 255, 255, 0.25);
-    }
-    
-    &:focus {
-        box-shadow: 0 0 0 1pt rgba(255, 255, 255, 0.25);
-    }
-    
-    &:active {
-        background-color: rgba(255, 255, 255, 0.25);
-        border-color: rgba(255, 255, 255, 0.25);
-    }
-`;
-
-const Row = styled.div`
-    width: 100%;
-    display: flex;
-    padding: 0;
-    align-items: center;
-    width: fit-content;
-`;
-
 const GlobalChart = ({ display }) => {
     // chart options
-    const [chartView] = useState(display === 'volume' ? CHART_VIEW.VOLUME : CHART_VIEW.LIQUIDITY)
+    const [chartView, setChartView] = useState(display === 'volume' ? CHART_VIEW.VOLUME : CHART_VIEW.LIQUIDITY)
 
     // time window and window size for chart
     const timeWindow = useTimeframe();
@@ -70,6 +44,7 @@ const GlobalChart = ({ display }) => {
     const oneDayVolumeUSD = 0;
     const totalLiquidityUSD = 4810000000;
 
+    const below800 = useMedia('(max-width: 800px)')
 
     // based on window, get starttime
     let utcStartTime = getTimeframe(timeWindow)
@@ -126,29 +101,34 @@ const GlobalChart = ({ display }) => {
             )}
             {chartDataFilteredUniswap && chartView === CHART_VIEW.VOLUME && (
                 <ResponsiveContainer aspect={60 / 28}>
-                    <TradingviewChart
-                        dataUniswap={chartDataFilteredUniswap}
-                        dataPancakeswap={chartDataFilteredPancakeswap}
-                        base={volumeWindow === VOLUME_WINDOW.WEEKLY ? oneWeekVolume : oneDayVolumeUSD}
-                        baseChange={volumeWindow === VOLUME_WINDOW.WEEKLY ? weeklyVolumeChange : volumeChangeUSD}
-                        title={volumeWindow === VOLUME_WINDOW.WEEKLY ? 'Volume (7d)' : 'Volume'}
-                        field={volumeWindow === VOLUME_WINDOW.WEEKLY ? 'weeklyVolumeUSD' : 'dailyVolumeUSD'}
-                        width={width}
-                        type={CHART_TYPES.BAR}
-                        useWeekly={volumeWindow === VOLUME_WINDOW.WEEKLY}
-                        timeframe={volumeWindow}
-                    />
-                
+                        <TradingviewChart
+                            dataUniswap={chartDataFilteredUniswap}
+                            dataPancakeswap={chartDataFilteredPancakeswap}
+                            base={volumeWindow === VOLUME_WINDOW.WEEKLY ? oneWeekVolume : oneDayVolumeUSD}
+                            baseChange={volumeWindow === VOLUME_WINDOW.WEEKLY ? weeklyVolumeChange : volumeChangeUSD}
+                            title={volumeWindow === VOLUME_WINDOW.WEEKLY ? 'Volume (7d)' : 'Volume'}
+                            field={volumeWindow === VOLUME_WINDOW.WEEKLY ? 'weeklyVolumeUSD' : 'dailyVolumeUSD'}
+                            width={width}
+                            type={CHART_TYPES.BAR}
+                            useWeekly={volumeWindow === VOLUME_WINDOW.WEEKLY}
+                            timeframe={volumeWindow}
+                        />
                 </ResponsiveContainer>
             )}
             {display === 'volume' && (
-                <Row>
+                <RowFixed style={{
+                    bottom: '70px',
+                    position: 'absolute',
+                    left: '20px',
+                    zIndex: 10,
+                }}>
                     <OptionButton
                         active={volumeWindow === VOLUME_WINDOW.DAYS}
                         onClick={() => setVolumeWindow(VOLUME_WINDOW.DAYS)}
                     >
                         <OptionText>D</OptionText>
                     </OptionButton>
+                    
                     <OptionButton
                         style={{ marginLeft: '4px' }}
                         active={volumeWindow === VOLUME_WINDOW.WEEKLY}
@@ -156,9 +136,12 @@ const GlobalChart = ({ display }) => {
                     >
                         <OptionText>W</OptionText>
                     </OptionButton>
-                </Row>
+                </RowFixed>
             )}
-    </>
+            {below800 && (
+                <DropdownSelect options={CHART_VIEW} active={chartView} setActive={setChartView} color={'#4FD8DE'} />
+            )}
+        </>
     ) : ('')
 }
 

@@ -3,7 +3,8 @@ import styled from 'styled-components';
 import { useMedia } from 'react-use';
 
 // components
-import { PageWrapper, ContentWrapper, Panel } from '../components'
+import Panel from '../components/Panel'
+import { PageWrapper, ContentWrapper } from '../components'
 import TitleSection from '../components/HomePageComponents/TitleSection'
 import GlobalChart from '../components/Charts/GlobalChart'
 

@@ -41,7 +41,7 @@ const Wrapper = styled.div`
 // constant height for charts
 const HEIGHT = 300
 
-const TradingViewChart = ({ type, dataUniswap, dataPancakeswap, base, baseChange, field, title, width, useWeekly = true }) => {
+const TradingViewChart = ({ type, dataUniswap, dataPancakeswap, base, baseChange, field, title, width, useWeekly = false }) => {
     // reference for DOM element to create with chart
     const ref = useRef()
 
@@ -214,7 +214,7 @@ const TradingViewChart = ({ type, dataUniswap, dataPancakeswap, base, baseChange
             setLastBarText()
 
             // update the title when hovering on the chart
-            /* chart.subscribeCrosshairMove(function (param) {
+            chart.subscribeCrosshairMove(function (param) {
                 if (
                     param === undefined ||
                     param.time === undefined ||
@@ -230,21 +230,27 @@ const TradingViewChart = ({ type, dataUniswap, dataPancakeswap, base, baseChange
                         : 
                             dayjs(param.time.year + '-' + param.time.month + '-' + param.time.day).format('MMMM D, YYYY');
 
-                    var price = param.seriesPrices.get(series)
+                    var priceUniswap = param.seriesPrices.get(seriesUniswap)
+                    var pricePancakeswap = param.seriesPrices.get(seriesPancakeswap)
 
                     toolTip.innerHTML = (
+                        
                         `<div style="font-size: 16px; margin: 4px 0px; color: ${textColor};">
                             ${title}
-                        </div>` +
-                        `<div style="font-size: 22px; margin: 4px 0px; color: ${textColor}">` +
-                            formattedNum(price, true) +
-                        '</div>' +
-                        '<div>' +
+                        </div>
+                        <div>` +
                             dateStr +
+                        `</div>
+                        <div style="font-size: 22px; margin: 4px 0px; color: #FF007B">` +
+                            formattedNum(priceUniswap, true) + 
+                        '</div>' +
+                        `<div style="font-size: 22px; margin: 4px 0px; color: #49D5DC">` +
+                            formattedNum(pricePancakeswap, true) + 
                         '</div>'
+                        
                     )
                 }
-            }) */
+            })
 
             chart.timeScale().fitContent()
 

@@ -28,18 +28,6 @@ export const ContentWrapper = styled.div`
     }
 `;
 
-export const Panel = styled.div`
-    width: 100%;
-    height: 100%;
-    minHeight: 300px;
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-start;
-    border-radius: 12px;
-    background-color: ${({ theme }) => theme.advancedBG};
-    padding: 1.25rem;
-    box-sizing: border-box;
-    box-shadow: 0 1.1px 2.8px -9px rgba(0, 0, 0, 0.008), 0 2.7px 6.7px -9px rgba(0, 0, 0, 0.012),
-                0 5px 12.6px -9px rgba(0, 0, 0, 0.015), 0 8.9px 22.6px -9px rgba(0, 0, 0, 0.018),
-                0 16.7px 42.2px -9px rgba(0, 0, 0, 0.022), 0 40px 101px -9px rgba(0, 0, 0, 0.03);
+export const StyledIcon = styled.div`
+    color: ${({ theme }) => theme.text1};
 `;
