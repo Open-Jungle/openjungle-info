@@ -7,7 +7,6 @@ import { ChevronDown as Arrow } from 'react-feather'
 import { StyledIcon } from '..'
 
 const Wrapper = styled.div`
-    z-index: 20;
     position: relative;
     background-color: ${({ theme }) => theme.panelColor};
     border: 1px solid ${({ open, color }) => (open ? color : 'rgba(0, 0, 0, 0.15);')} 

@@ -36,9 +36,14 @@ const theme = (isDarkMode, selectedChain) => {
             mainColorZeroOp: isDarkMode ? 'rgba(138, 197, 60, 0)' : 'rgba(111, 159, 47, 0)',
 
             lightGray: isDarkMode ? "#616161" : "#919191",
+            lightGray_1: isDarkMode ? "#D9D8D8" : "rgba(0,0,0,0.5)",
             lightGrayHover: isDarkMode ? "#919191" : "#616161",
 
+
             whiteBlack: isDarkMode ? '#DEDEDE' : '#323232',
+
+            uniswapPink: '#FF007B',
+            pancakeswapBlue: '#49D5DC',
         },
 
         isEthTheme: isEthTheme ? "block" : "none",
@@ -85,7 +90,6 @@ export const GlobalStyle = createGlobalStyle`
         font-size: 12px;
         background-color: rgba(255, 255, 255, 0.23);
         text-align: left;
-        z-index: 10;
         pointer-events: none;
         display: block;
         fontWeight: 500;

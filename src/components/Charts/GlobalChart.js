@@ -101,6 +101,7 @@ const GlobalChart = ({ display }) => {
             )}
             {chartDataFilteredUniswap && chartView === CHART_VIEW.VOLUME && (
                 <ResponsiveContainer aspect={60 / 28}>
+                    <>
                         <TradingviewChart
                             dataUniswap={chartDataFilteredUniswap}
                             dataPancakeswap={chartDataFilteredPancakeswap}
@@ -113,30 +114,29 @@ const GlobalChart = ({ display }) => {
                             useWeekly={volumeWindow === VOLUME_WINDOW.WEEKLY}
                             timeframe={volumeWindow}
                         />
+                        <RowFixed style={{
+                            bottom: '90px',
+                            position: 'absolute',
+                            left: '20px',
+                            zIndex: 10,
+                        }}>
+                            <OptionButton
+                                active={volumeWindow === VOLUME_WINDOW.DAYS}
+                                onClick={() => setVolumeWindow(VOLUME_WINDOW.DAYS)}
+                            >
+                                <OptionText>D</OptionText>
+                            </OptionButton>
+                            
+                            <OptionButton
+                                style={{ marginLeft: '4px' }}
+                                active={volumeWindow === VOLUME_WINDOW.WEEKLY}
+                                onClick={() => setVolumeWindow(VOLUME_WINDOW.WEEKLY)}
+                            >
+                                <OptionText>W</OptionText>
+                            </OptionButton>
+                        </RowFixed>
+                    </>
                 </ResponsiveContainer>
-            )}
-            {display === 'volume' && (
-                <RowFixed style={{
-                    bottom: '70px',
-                    position: 'absolute',
-                    left: '20px',
-                    zIndex: 10,
-                }}>
-                    <OptionButton
-                        active={volumeWindow === VOLUME_WINDOW.DAYS}
-                        onClick={() => setVolumeWindow(VOLUME_WINDOW.DAYS)}
-                    >
-                        <OptionText>D</OptionText>
-                    </OptionButton>
-                    
-                    <OptionButton
-                        style={{ marginLeft: '4px' }}
-                        active={volumeWindow === VOLUME_WINDOW.WEEKLY}
-                        onClick={() => setVolumeWindow(VOLUME_WINDOW.WEEKLY)}
-                    >
-                        <OptionText>W</OptionText>
-                    </OptionButton>
-                </RowFixed>
             )}
             {below800 && (
                 <DropdownSelect options={CHART_VIEW} active={chartView} setActive={setChartView} color={'#4FD8DE'} />

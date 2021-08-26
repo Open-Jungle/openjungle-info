@@ -6,7 +6,7 @@ export const PageWrapper = styled.div`
     padding-top: 36px;
     padding-bottom: 80px;
 
-    @media screen and (max-width: 600px) {
+    @media screen and (max-width: 768px) {
         padding: 0 12px;
     }
 `;

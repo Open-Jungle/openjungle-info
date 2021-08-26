@@ -256,3 +256,12 @@ export function useGlobalChartDataPancakeswap() {
 
     return [chartDataDailyPancakeswap, chartDataWeeklyPancakeswap]
 }
+
+export function useBattleBarData() {
+    useGlobalChartDataUniswap();
+    useGlobalChartDataPancakeswap();
+    const [state] = useGlobalDataContext();
+    const chartDataDailyPancakeswap = state?.GLOBAL_CHART_DATA_PANCAKESWAP?.daily;
+    const chartDataDailyUniswap = state?.GLOBAL_CHART_DATA_UNISWAP?.daily;
+    return [chartDataDailyUniswap, chartDataDailyPancakeswap]
+}
