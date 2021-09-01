@@ -3,23 +3,38 @@ import styled from 'styled-components';
 import { useMedia } from 'react-use';
 
 // components
+import { AutoRow, RowBetween } from '../components/Rows'
+//import { CustomRouterLink } from '../components/Links'
 import Panel from '../components/Panel'
 import { PageWrapper, ContentWrapper } from '../components'
 import TitleSection from '../components/HomePageComponents/TitleSection'
 import BattleBar from '../components/HomePageComponents/BattleBar'
 import GlobalChart from '../components/Charts/GlobalChart'
+import TopTokenList from '../components/Lists/TopTokenList'
 
+import { GoFlame } from 'react-icons/go'
+
+// contexts
+import { useAllTokenData } from '../contexts/TokenData'
+
+const ListOptions = styled(AutoRow)`
+    height: 40px;
+    width: 100%;
+    font-size: 1.25rem;
+    font-weight: 600;
+
+    @media screen and (max-width: 640px) {
+        font-size: 1rem;
+    }
+`
 
 const OverviewTitle = styled.div`
     font-weight: bold;
-    font-size: 22px;
+    font-size: 1.125rem;
     color: ${({ theme }) => theme.colors.whiteBlack};
     width: 100%;
     text-align: center;
-
-    @media screen and (max-width: 768px) {
-        font-size: 16px;
-    }
+    white-space: nowrap;
 `;
 
 const GridRow = styled.div`
@@ -39,6 +54,7 @@ const MobileChartWrapper = styled.div`
 `;
 
 const HomePage = () => {
+    const allTokens = useAllTokenData()
 
     const below800 = useMedia("(max-width: 800px)");
 
@@ -51,7 +67,7 @@ const HomePage = () => {
         <PageWrapper>
             <ContentWrapper>
                 <TitleSection />
-                <OverviewTitle>TOP DECENTRALIZED EXCHANGES</OverviewTitle>
+
                 <BattleBar toggleIsGlobalChartActive={toggleIsGlobalChartActive} />
                 {isGlobalChartActive ? 
                     <>
@@ -73,7 +89,18 @@ const HomePage = () => {
                             </MobileChartWrapper>
                         )}
                     </>:<></>
-                }
+                }                
+                <ListOptions gap="10px" style={{ marginTop: '2rem', marginBottom: '.5rem' }}>
+                    <RowBetween>
+                        <OverviewTitle >
+                            <GoFlame /> Top Tokens Today <GoFlame />
+                        </OverviewTitle>
+                        {/* <CustomRouterLink to={'/tokens'}>See All</CustomRouterLink> */}
+                    </RowBetween>
+                </ListOptions>
+                <Panel style={{ marginTop: '6px', padding: '1.125rem 0 ' }}>
+                    <TopTokenList tokens={allTokens} />
+                </Panel>
             </ContentWrapper>
         </PageWrapper>
     )

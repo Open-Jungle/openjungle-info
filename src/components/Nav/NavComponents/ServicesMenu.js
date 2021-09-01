@@ -1,12 +1,15 @@
 import React from 'react';
 import styled from 'styled-components';
-import { withRouter, Link as RouterLink } from 'react-router-dom';
+import { withRouter } from 'react-router-dom';
 
 // react icons
 import { AiOutlineHome } from 'react-icons/ai';
 import { GiSwapBag } from 'react-icons/gi';
 import { FaSwimmingPool } from 'react-icons/fa';
 import { BiGlobeAlt, BiRocket } from 'react-icons/bi';
+
+// Components
+import { ServiceRouterLink } from '../../Links'
 
 const ServicesMenuWrapper = styled.div`
     height: 100%;
@@ -16,37 +19,24 @@ const ServicesMenuWrapper = styled.div`
     justify-content: center;
 `;
 
-const ServiceMenuItem = styled(RouterLink)`
-    padding-left: ${({ theme }) => theme.paddings.SideNavLeftPadding};
-    text-decoration: none;
-    font-size: 18px;
-    line-height: 36px;
-    font-weight: bold;
-    color: ${({ theme }) => theme.colors.lightGray};
-
-    :hover {
-        color: ${({ theme }) => theme.colors.lightGrayHover};
-    }
-`;
-
 const ServicesMenu = () => {
     return (
         <ServicesMenuWrapper>
-            <ServiceMenuItem to={'/home'}>
+            <ServiceRouterLink to={'/home'}>
                 <AiOutlineHome /> HOME
-            </ServiceMenuItem>
-            <ServiceMenuItem to={'/swap'}>
+            </ServiceRouterLink>
+            <ServiceRouterLink to={'/swap'}>
                 <GiSwapBag /> SWAP
-            </ServiceMenuItem>
-            <ServiceMenuItem to={'/liquidity'}>
+            </ServiceRouterLink>
+            <ServiceRouterLink to={'/liquidity'}>
                 <FaSwimmingPool /> LIQUIDITY
-            </ServiceMenuItem>
-            <ServiceMenuItem to={'/explore'}>
+            </ServiceRouterLink>
+            <ServiceRouterLink to={'/explore'}>
                 <BiGlobeAlt /> EXPLORE
-            </ServiceMenuItem>
-            <ServiceMenuItem to={'/launch'}>
+            </ServiceRouterLink>
+            <ServiceRouterLink to={'/launch'}>
                 <BiRocket /> LAUNCH
-            </ServiceMenuItem>
+            </ServiceRouterLink>
         </ServicesMenuWrapper>
     )
 }

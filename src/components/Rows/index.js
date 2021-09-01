@@ -21,4 +21,13 @@ export const RowFixed = styled(Row)`
     width: fit-content;
 `;
 
+export const AutoRow = styled(Row)`
+    flex-wrap: ${({ wrap }) => wrap ?? 'nowrap'};
+    margin: -${({ gap }) => gap};
+    
+    & > * {
+        margin: ${({ gap }) => gap} !important;
+    }
+`;
+
 export default Row

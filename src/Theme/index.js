@@ -44,6 +44,10 @@ const theme = (isDarkMode, selectedChain) => {
 
             uniswapPink: '#FF007B',
             pancakeswapBlue: '#49D5DC',
+
+            link: '#2172E5',
+
+            divider: isDarkMode ? 'rgba(43, 43, 43, 0.435)' : 'rgba(43, 43, 43, 0.035)',
         },
 
         isEthTheme: isEthTheme ? "block" : "none",
@@ -65,6 +69,8 @@ const theme = (isDarkMode, selectedChain) => {
         bg3: isDarkMode ? '#40444F' : '#EDEEF2',
         bg4: isDarkMode ? '#565A69' : '#CED0D9',
         bg5: isDarkMode ? '#565A69' : '#888D9B',
+
+
         
     }
 }

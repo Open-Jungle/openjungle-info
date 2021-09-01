@@ -7,19 +7,27 @@ import weekOfYear from 'dayjs/plugin/weekOfYear'
 import { useTimeframe } from './Application'
 
 // utils
-import { getTimeframe } from '../utils'
+import { getTimeframe, getPercentChange, getBlockFromTimestamp } from '../utils'
 
 // clients and queries
 import { uniswapClient, pancakeswapClient } from '../apollo/client'
-import { UNISWAP_GLOBAL_CHART, PANCAKESWAP_GLOBAL_CHART } from '../apollo/queries'
+import { ETH_PRICE, UNISWAP_GLOBAL_CHART, PANCAKESWAP_GLOBAL_CHART } from '../apollo/queries'
 
 // format dayjs with the libraries that we need
 dayjs.extend(utc)
 dayjs.extend(weekOfYear)
 
+// context state keys
+const ETH_PRICE_KEY = 'ETH_PRICE_KEY'
+const GLOBAL_DATA_UNISWAP = 'GLOBAL_DATA_UNISWAP'
+const GLOBAL_CHART_DATA_UNISWAP = 'GLOBAL_CHART_DATA_UNISWAP'
+const GLOBAL_CHART_DATA_PANCAKESWAP = 'GLOBAL_CHART_DATA_PANCAKESWAP'
+
 // reducer keys
+const UPDATE_GLOBAL_DATA_UNISWAP = 'UPDATE_GLOBAL_DATA_UNISWAP'
 const UPDATE_GLOBAL_CHART_DATA_UNISWAP = 'UPDATE_GLOBAL_CHART_DATA_UNISWAP'
 const UPDATE_GLOBAL_CHART_DATA_PANCAKESWAP = 'UPDATE_GLOBAL_CHART_DATA_PANCAKESWAP'
+const UPDATE_ETH_PRICE = 'UPDATE_ETH_PRICE'
 
 // initialize the context
 const GlobalDataContext = createContext();
@@ -28,11 +36,26 @@ function useGlobalDataContext() { return useContext(GlobalDataContext) }
 function reducer(state, { type, payload }) {
     switch(type){
 
+        case UPDATE_ETH_PRICE: {
+            const { ethPrice, oneDayPrice, ethPriceChange } = payload
+            return {
+                [ETH_PRICE_KEY]: ethPrice, oneDayPrice, ethPriceChange
+            }
+        }
+
+        case UPDATE_GLOBAL_DATA_UNISWAP: {
+            const { data } = payload
+            return {
+                ...state,
+                [GLOBAL_DATA_UNISWAP]: data,
+            }
+        }
+
         case UPDATE_GLOBAL_CHART_DATA_UNISWAP: {
             const { daily, weekly } = payload
             return {
                 ...state,
-                GLOBAL_CHART_DATA_UNISWAP: { daily, weekly },
+                [GLOBAL_CHART_DATA_UNISWAP]: { daily, weekly },
             }
         }
 
@@ -40,7 +63,7 @@ function reducer(state, { type, payload }) {
             const { daily, weekly } = payload
             return {
                 ...state,
-                GLOBAL_CHART_DATA_PANCAKESWAP: { daily, weekly },
+                [GLOBAL_CHART_DATA_PANCAKESWAP]: { daily, weekly },
             }
         }
 
@@ -52,6 +75,20 @@ function reducer(state, { type, payload }) {
 
 export default function Provider({ children }) {
     const [state, dispatch] = useReducer(reducer, {})
+
+    const updateEthPrice = useCallback((ethPrice, oneDayPrice, ethPriceChange) => {
+        dispatch({
+            type: UPDATE_ETH_PRICE,
+            payload: { ethPrice, oneDayPrice, ethPriceChange },
+        })
+    }, [])
+
+    const updateGlobalDataUniswap = useCallback((data)=>{
+        dispatch({
+            type: UPDATE_GLOBAL_DATA_UNISWAP,
+            payload: { data }
+        })
+    },[])
 
     const updateGlobalChartDataUniswap = useCallback((daily, weekly)=>{
         dispatch({
@@ -73,10 +110,12 @@ export default function Provider({ children }) {
                 () => [
                     state,
                     {
+                        updateEthPrice,
+                        updateGlobalDataUniswap,
                         updateGlobalChartDataUniswap,
                         updateGlobalChartDataPancakeswap
                     }
-                ],[state, updateGlobalChartDataUniswap, updateGlobalChartDataPancakeswap]
+                ],[state, updateEthPrice, updateGlobalDataUniswap, updateGlobalChartDataUniswap, updateGlobalChartDataPancakeswap]
             )}
         >
             {children}
@@ -177,6 +216,56 @@ const getGlobalChartData = async (dex, oldestDateToFetch) => {
         }
     } catch (e) { console.log(e) }
     return [data, weeklyData]
+}
+
+// Gets the current price of ETH, 24 hour price, and % change between them
+const getEthPrice = async () => {
+    const utcCurrentTime = dayjs()
+    const utcOneDayBack = utcCurrentTime.subtract(1, 'day').startOf('minute').unix()
+
+    let ethPrice = 0
+    let ethPriceOneDay = 0
+    let priceChangeETH = 0
+
+    try {
+        
+        // get the actual price of ETH
+        let result = await uniswapClient.query({
+            query: ETH_PRICE(),
+            fetchPolicy: 'cache-first',
+        })
+        
+        // get one day back price of ETH for % change
+        let oneDayBlock = await getBlockFromTimestamp(utcOneDayBack)
+        let resultOneDay = await uniswapClient.query({
+            query: ETH_PRICE(oneDayBlock),
+            fetchPolicy: 'cache-first',
+        })
+
+        const currentPrice = result?.data?.bundles[0]?.ethPrice
+        const oneDayBackPrice = resultOneDay?.data?.bundles[0]?.ethPrice
+        priceChangeETH = getPercentChange(currentPrice, oneDayBackPrice)
+        ethPrice = currentPrice
+        ethPriceOneDay = oneDayBackPrice
+    } catch (e) { console.log(e) }
+
+    return [ethPrice, ethPriceOneDay, priceChangeETH]
+}
+
+export function useEthPrice() {
+    const [state, { updateEthPrice }] = useGlobalDataContext()
+    const ethPrice = state?.[ETH_PRICE_KEY]
+    const ethPriceOld = state?.['oneDayPrice']
+    useEffect(() => {
+        async function checkForEthPrice() {
+            if (!ethPrice) {
+                let [newPrice, oneDayPrice, priceChange] = await getEthPrice()
+                updateEthPrice(newPrice, oneDayPrice, priceChange)
+            }
+        }
+        checkForEthPrice()
+    }, [ethPrice, updateEthPrice])
+    return [ethPrice, ethPriceOld]
 }
 
 export function useGlobalChartDataUniswap() {

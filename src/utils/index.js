@@ -1,6 +1,11 @@
 import dayjs from 'dayjs'
 import utc from 'dayjs/plugin/utc'
 import Numeral from 'numeral'
+import { Text } from 'rebass'
+import { ethers } from 'ethers'
+
+import { EthBlockClient } from '../apollo/client'
+import { ETH_GET_BLOCK } from '../apollo/queries'
 
 import { timeframeOptions } from '../constants'
 
@@ -63,4 +68,55 @@ export const formattedNum = (number, usd = false, acceptNegatives = false) => {
     }
 
     return Number(parseFloat(num).toFixed(4)).toString()
+}
+
+export async function getBlockFromTimestamp(timestamp) {
+    let result = await EthBlockClient.query({
+        query: ETH_GET_BLOCK,
+        variables: {
+            timestampFrom: timestamp,
+            timestampTo: timestamp + 600,
+        },
+        fetchPolicy: 'cache-first',
+    })
+    return result?.data?.blocks?.[0]?.number
+}
+
+export const getPercentChange = (valueNow, value24HoursAgo) => {
+    const adjustedPercentChange = ((parseFloat(valueNow) - parseFloat(value24HoursAgo)) / parseFloat(value24HoursAgo)) * 100
+    if (isNaN(adjustedPercentChange) || !isFinite(adjustedPercentChange)) { return 0 }
+    return adjustedPercentChange
+}
+
+export const get2DayPercentChange = (valueNow, value24HoursAgo, value48HoursAgo) => {
+  // get volume info for both 24 hour periods
+  let currentChange = parseFloat(valueNow) - parseFloat(value24HoursAgo)
+  let previousChange = parseFloat(value24HoursAgo) - parseFloat(value48HoursAgo)
+
+  const adjustedPercentChange = (parseFloat(currentChange - previousChange) / parseFloat(previousChange)) * 100
+
+  if (isNaN(adjustedPercentChange) || !isFinite(adjustedPercentChange)) {
+    return [currentChange, 0]
+  }
+  return [currentChange, adjustedPercentChange]
+}
+
+export function formattedPercent(percent) {
+    percent = parseFloat(percent)
+    if (!percent || percent === 0) { return <Text fontWeight={500}>0%</Text> }
+    if (percent < 0.0001 && percent > 0) { return (<Text fontWeight={500} color="green">{'< 0.0001%'}</Text>)}
+    if (percent < 0 && percent > -0.0001) { return ( <Text fontWeight={500} color="red">{'< 0.0001%'}</Text>)}
+
+    let fixedPercent = percent.toFixed(2)
+    if (fixedPercent === '0.00') { return '0%' }
+    if (fixedPercent > 0) {
+        if (fixedPercent > 100) { return <Text fontWeight={500} color="green">{`+${percent?.toFixed(0).toLocaleString()}%`}</Text> } 
+        else { return <Text fontWeight={500} color="green">{`+${fixedPercent}%`}</Text> }
+    } 
+    else { return <Text fontWeight={500} color="red">{`${fixedPercent}%`}</Text> }
+}
+
+export const isAddress = (value) => {
+    try { return ethers.utils.getAddress(value.toLowerCase()) } 
+    catch { return false }
 }

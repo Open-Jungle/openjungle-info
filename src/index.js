@@ -9,6 +9,7 @@ import ThemeProvider, { GlobalStyle } from "./Theme";
 
 // Context Providers
 import LocalStorageContextProvider, { Updater as LocalStorageContextUpdater } from './contexts/LocalStorage';
+import TokenDataContextProvider, { Updater as TokenDataContextUpdater } from './contexts/TokenData'
 import ApplicationContextProvider from './contexts/Application';
 import NetworkContextProvider from "./contexts/Network";
 import GlobalDataContextProvider from './contexts/GlobalData';
@@ -18,9 +19,11 @@ function ContextProviders({ children }) {
         <LocalStorageContextProvider>
             <ApplicationContextProvider>
                 <NetworkContextProvider>
-                    <GlobalDataContextProvider>
-                        {children}
-                    </GlobalDataContextProvider>
+                    <TokenDataContextProvider>
+                        <GlobalDataContextProvider>
+                            {children}
+                        </GlobalDataContextProvider>
+                    </TokenDataContextProvider>
                 </NetworkContextProvider>
             </ApplicationContextProvider>
         </LocalStorageContextProvider>
@@ -31,6 +34,7 @@ function Updaters() {
     return (
         <>
             <LocalStorageContextUpdater />
+            <TokenDataContextUpdater />
         </>
     );
 }
