@@ -18,16 +18,16 @@ export const CustomRouterLink = styled(RouterLink)`
     text-decoration: none;
     font-size: 14px;
     font-weight: 500;
-    color: ${({ theme }) => theme.colors.link};
+    color: ${({ theme }) => theme.text1};
 
     &:visited {
-        color: ${({ theme }) => theme.colors.link};
+        color: ${({ theme }) => theme.text1};
     }
 
     &:hover {
         cursor: pointer;
         text-decoration: none;
         underline: none;
-        color: ${({ theme }) => theme.colors.link};
+        color: ${({ theme }) => theme.text1};
     }
 `

@@ -68,7 +68,7 @@ const HomePage = () => {
             <ContentWrapper>
                 <TitleSection />
 
-                <BattleBar toggleIsGlobalChartActive={toggleIsGlobalChartActive} />
+                <BattleBar isGlobalChartActive={isGlobalChartActive} toggleIsGlobalChartActive={toggleIsGlobalChartActive} />
                 {isGlobalChartActive ? 
                     <>
                         {!below800 && (
@@ -90,10 +90,10 @@ const HomePage = () => {
                         )}
                     </>:<></>
                 }                
-                <ListOptions gap="10px" style={{ marginTop: '2rem', marginBottom: '.5rem' }}>
+                <ListOptions style={{ marginTop: '2rem', marginBottom: '.5rem' }}>
                     <RowBetween>
                         <OverviewTitle >
-                            <GoFlame /> Top Tokens Today <GoFlame />
+                            <GoFlame /> Top Gainers Today <GoFlame />
                         </OverviewTitle>
                         {/* <CustomRouterLink to={'/tokens'}>See All</CustomRouterLink> */}
                     </RowBetween>

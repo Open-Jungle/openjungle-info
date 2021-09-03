@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react'
 import styled from 'styled-components'
 
 import { formattedNum } from '../../utils'
-import { ChevronDown as Arrow } from 'react-feather'
+import { ChevronDown, ChevronUp } from 'react-feather'
 import { StyledIcon } from '..'
 
 import { useBattleBarData } from '../../contexts/GlobalData'
@@ -106,13 +106,19 @@ const ShowChartButton = styled.div`
     color: ${({ theme }) => theme.text1}
 `;
 
-const ArrowStyled = styled(Arrow)`
+const ArrowDownStyled = styled(ChevronDown)`
     height: 20px;
     width: 20px;
     margin-left: 6px;
 `;
 
-const BattleBar = ({ toggleIsGlobalChartActive }) => {
+const ArrowUpStyled = styled(ChevronUp)`
+    height: 20px;
+    width: 20px;
+    margin-left: 6px;
+`;
+
+const BattleBar = ({ isGlobalChartActive, toggleIsGlobalChartActive }) => {
     const [chartDataDailyUniswap, chartDataDailyPancakeswap] = useBattleBarData();
     const [uniswapTotalLiquidityUSD, setUniswapTotalLiquidityUSD] = useState();
     const [pancakeswapTotalLiquidityUSD, setPancakeswapTotalLiquidityUSD] = useState();
@@ -154,7 +160,7 @@ const BattleBar = ({ toggleIsGlobalChartActive }) => {
                         <ShowChartButton onClick={toggleIsGlobalChartActive}>
                             Global Chart
                             <StyledIcon>
-                                <ArrowStyled />
+                                {isGlobalChartActive? <ArrowUpStyled /> : <ArrowDownStyled />}
                             </StyledIcon>
                         </ShowChartButton>
                     </ShowChartButtonWrapper>

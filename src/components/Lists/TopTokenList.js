@@ -25,8 +25,9 @@ const DashGrid = styled.div`
     display: grid;
     grid-gap: 1em;
     grid-template-columns: 100px 1fr 1fr;
-    grid-template-areas: 'name vol change';
+    grid-template-areas: 'name price change';
     padding: 0 1.125rem;
+    background: ${({ isTitle }) => isTitle ? "rgba(0, 0, 0, 0)" : "rgba(255, 0, 123, 0.05)"};
 
     > * {
         justify-content: flex-end;
@@ -42,7 +43,7 @@ const DashGrid = styled.div`
         display: grid;
         grid-gap: 1em;
         grid-template-columns: 180px 1fr 1fr 1fr;
-        grid-template-areas: 'name symbol vol change';
+        grid-template-areas: 'name symbol price change';
 
         > * {
             justify-content: flex-end;
@@ -54,11 +55,11 @@ const DashGrid = styled.div`
         }   
     }
 
-    @media screen and (min-width: 1080px) {
+    @media screen and (min-width: 1340px) {
         display: grid;
         grid-gap: 0.5em;
         grid-template-columns: 1.5fr 0.6fr 1fr 1fr 1fr 1fr;
-        grid-template-areas: 'name symbol liq vol price change';
+        grid-template-areas: 'name symbol price liq vol change';
     }
 `;
 
@@ -131,7 +132,8 @@ function TopTokenList({ tokens, itemMax = 10, useTracked = false }) {
     const [sortDirection, setSortDirection] = useState(true)
     const [sortedColumn, setSortedColumn] = useState(SORT_FIELD.CHANGE)
 
-    const below1080 = useMedia('(max-width: 1080px)')
+    //const below1080 = useMedia('(max-width: 1080px)')
+    const below1340 = useMedia('(max-width: 1340px)')
     const below680 = useMedia('(max-width: 680px)')
 
     const formattedTokens = useMemo(() => {
@@ -141,12 +143,12 @@ function TopTokenList({ tokens, itemMax = 10, useTracked = false }) {
     }, [tokens])
 
     useEffect(() => {
-        if (tokens) {
+        if (tokens && formattedTokens) {
             let extraPages = 1
             if (tokens.length % itemMax === 0) { extraPages = 0 }
-            setMaxPage(Math.floor(tokens.length / itemMax) + extraPages)
+            setMaxPage(Math.floor(formattedTokens.length / itemMax) + extraPages - 1)
         }
-    }, [tokens, itemMax])
+    }, [tokens, formattedTokens, itemMax])
 
     const filteredList = useMemo(() => {return (formattedTokens && formattedTokens.sort((a, b) => {
         if (sortedColumn === SORT_FIELD.SYMBOL || sortedColumn === SORT_FIELD.NAME) {
@@ -183,15 +185,15 @@ function TopTokenList({ tokens, itemMax = 10, useTracked = false }) {
                 </DataText>
             )}
             <DataText area="price" color="text" fontWeight="500"> {formattedNum(item.priceUSD, true)}</DataText>
+            {!below1340 && <DataText area="vol">{formattedNum(item.oneDayVolumeUSD, true)}</DataText>}
+            {!below1340 && <DataText area="liq">{formattedNum(item.totalLiquidityUSD, true)}</DataText>}
             <DataText area="change">{formattedPercent(item.priceChangeUSD)}</DataText>
-            {!below1080 && <DataText area="vol">{formattedNum(item.oneDayVolumeUSD, true)}</DataText>}
-            {!below1080 && <DataText area="liq">{formattedNum(item.totalLiquidityUSD, true)}</DataText>}
         </DashGrid>
     )}
 
     return (
         <ListWrapper>
-            <DashGrid center={true} style={{ height: 'fit-content', padding: '0 1.125rem 1rem 1.125rem' }}>
+            <DashGrid center={true} style={{ height: 'fit-content', padding: '0 1.125rem 1rem 1.125rem' }} isTitle={true}>
                 <Flex alignItems="center" justifyContent="flexStart">
                     <ClickableText
                         color="text"
@@ -230,18 +232,8 @@ function TopTokenList({ tokens, itemMax = 10, useTracked = false }) {
                         Price {sortedColumn === SORT_FIELD.PRICE ? (!sortDirection ? '↑' : '↓') : ''}
                     </ClickableText>
                 </Flex>
-                <Flex alignItems="center">
-                    <ClickableText
-                        area="change"
-                        onClick={(e) => {
-                            setSortedColumn(SORT_FIELD.CHANGE)
-                            setSortDirection(sortedColumn !== SORT_FIELD.CHANGE ? true : !sortDirection)
-                        }}
-                    >
-                        Price Change (24hrs) {sortedColumn === SORT_FIELD.CHANGE ? (!sortDirection ? '↑' : '↓') : ''}
-                    </ClickableText>
-                </Flex>
-                {!below1080 && (
+                
+                {!below1340 && (
                     <Flex alignItems="center">
                         <ClickableText
                             area="liq"
@@ -254,7 +246,7 @@ function TopTokenList({ tokens, itemMax = 10, useTracked = false }) {
                         </ClickableText> 
                     </Flex>
                 )}
-                {!below1080 && (
+                {!below1340 && (
                     <Flex alignItems="center">
                         <ClickableText
                             area="vol"
@@ -267,6 +259,17 @@ function TopTokenList({ tokens, itemMax = 10, useTracked = false }) {
                         </ClickableText>
                     </Flex>
                 )}
+                <Flex alignItems="center">
+                    <ClickableText
+                        area="change"
+                        onClick={(e) => {
+                            setSortedColumn(SORT_FIELD.CHANGE)
+                            setSortDirection(sortedColumn !== SORT_FIELD.CHANGE ? true : !sortDirection)
+                        }}
+                    >
+                        Change (24hrs) {sortedColumn === SORT_FIELD.CHANGE ? (!sortDirection ? '↑' : '↓') : ''}
+                    </ClickableText>
+                </Flex>
             </DashGrid>
             <Divider />
             <List p={0}>

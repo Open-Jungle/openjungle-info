@@ -22,9 +22,14 @@ export const ContentWrapper = styled.div`
     margin: 0 auto;
     padding: 0 2rem;
     box-sizing: border-box;
+    
     @media screen and (max-width: 1180px) {
         grid-template-columns: 1fr;
         padding: 0 1rem;
+    }
+
+    @media screen and (max-width: 768px) {
+        padding-bottom: 25px;
     }
 `;
 
